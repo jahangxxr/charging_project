@@ -6,10 +6,10 @@ const app = express();
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-  host: process.env.rm-1ud3gbxgw3p1r8ckz.mysql.rds.aliyuncs.com,
-  user: process.env.jahangeer,
-  password: process.env.Huawei@use123,
-  database: process.env.charging_booth
+  host: process.env.'rm-1ud3gbxgw3p1r8ckz.mysql.rds.aliyuncs.com',
+  user: process.env.'jahangeer',
+  password: process.env.'Huawei@use123',
+  database: process.env.'charging_booth'
 });
 
 db.connect((err) => {
