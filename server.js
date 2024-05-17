@@ -50,12 +50,13 @@ app.post('/api/updateBilling', async (req, res) => {
   const { user_id, locker_id, voltage, current, power } = req.body;
   try {
     const result = await db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power]);
-    res.send('Billing data inserted!');
+    res.send('Billing data inserted!'); // This line should return the correct response message
   } catch (err) {
     console.error('Error updating billing:', err);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Define route handler for GET request to the root URL
 app.get('/', (req, res) => {
