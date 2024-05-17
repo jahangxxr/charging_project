@@ -5,7 +5,7 @@ const axios = require('axios');
 // Function to add a new user
 async function addUser() {
   try {
-    const response = await axios.post('YOUR_API_URL/api/addUser', {
+    const response = await axios.post('http://localhost:3000/api/addUser', {
       fingerprint_id: '123',
       name: 'John Doe',
       email: 'john@example.com'
@@ -19,7 +19,7 @@ async function addUser() {
 // Function to add a new locker
 async function addLocker() {
   try {
-    const response = await axios.post('YOUR_API_URL/api/addLocker', {
+    const response = await axios.post('http://localhost:3000/api/addLocker', {
       locker_number: 'A001'
     });
     console.log(response.data);
