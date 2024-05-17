@@ -12,13 +12,19 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-    return;
-  }
-  console.log('Database connected!');
-});
+// Function to handle database connection errors
+function handleDatabaseError(err) {
+  console.error('Database error:', err);
+  // Reconnect to the database
+  db.connect((err) => {
+    if (err) {
+      console.error('Failed to reconnect to the database:', err);
+      // You may want to implement additional error handling or retry logic here
+    } else {
+      console.log('Database reconnected!');
+    }
+  });
+}
 
 app.post('/api/addUser', (req, res) => {
   const { fingerprint_id, name, email } = req.body;
@@ -46,13 +52,20 @@ app.post('/api/addLocker', (req, res) => {
   });
 });
 
+// Example route handler
 app.post('/api/updateBilling', (req, res) => {
   const { user_id, locker_id, voltage, current, power } = req.body;
   const query = 'INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)';
   db.query(query, [user_id, locker_id, voltage, current, power], (err, result) => {
     if (err) {
-      console.error('Error updating billing:', err);
-      res.status(500).send('Internal Server Error');
+      if (err.fatal) {
+        // Handle fatal error
+        handleDatabaseError(err);
+      } else {
+        // Handle non-fatal error
+        console.error('Error updating billing:', err);
+        res.status(500).send('Internal Server Error');
+      }
       return;
     }
     res.send('Billing data inserted!');
