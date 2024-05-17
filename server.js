@@ -18,6 +18,12 @@ db.on('error', (err) => {
   console.error('Database error:', err);
 });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+
 // Route to add a new user
 app.post('/api/addUser', async (req, res) => {
   const { fingerprint_id, name, email } = req.body;
