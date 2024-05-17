@@ -14,9 +14,18 @@ const db = mysql.createPool({
 });
 
 // Handle database connection errors
-db.on('error', (err) => {
-  console.error('Database error:', err);
+app.get('/api/checkDB', (req, res) => {
+  db.query('SELECT 1', (err, results) => {
+    if (err) {
+      console.error('Database connection error:', err);
+      res.status(500).send('Database connection error');
+    } else {
+      res.send('Database connection is OK');
+    }
+  });
 });
+
+
 
 // Route to add a new user
 app.post('/api/addUser', async (req, res) => {
