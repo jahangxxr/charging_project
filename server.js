@@ -22,13 +22,16 @@ db.on('error', (err) => {
 app.post('/api/addUser', async (req, res) => {
   const { fingerprint_id, name, email } = req.body;
   try {
-    const result = await db.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email]);
+    const connection = await db.getConnection();
+    const result = await connection.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email]);
+    connection.release(); // Release the connection back to the pool
     res.send('User added!');
   } catch (err) {
     console.error('Error adding user:', err);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Route to add a new locker
 app.post('/api/addLocker', async (req, res) => {
