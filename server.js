@@ -46,18 +46,18 @@ app.post('/api/addLocker', (req, res) => {
   });
 });
 
-// app.post('/api/updateBilling', (req, res) => {
-//   const { user_id, locker_id, voltage, current, power } = req.body;
-//   const query = 'INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)';
-//   db.query(query, [user_id, locker_id, voltage, current, power], (err, result) => {
-//     if (err) {
-//       console.error('Error updating billing:', err);
-//       res.status(500).send('Internal Server Error');
-//       return;
-//     }
-//     res.send('Billing data inserted!');
-//   });
-// });
+app.post('/api/updateBilling', (req, res) => {
+  const { user_id, locker_id, voltage, current, power } = req.body;
+  const query = 'INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)';
+  db.query(query, [user_id, locker_id, voltage, current, power], (err, result) => {
+    if (err) {
+      console.error('Error updating billing:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.send('Billing data inserted!');
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
