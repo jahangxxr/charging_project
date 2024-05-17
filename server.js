@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const db = mysql.createPool({
-  connectionLimit : 10,
+  connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -23,7 +23,7 @@ app.post('/api/addUser', async (req, res) => {
   const { fingerprint_id, name, email } = req.body;
   try {
     const connection = await db.getConnection();
-    const result = await connection.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email]);
+    await connection.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email]);
     connection.release(); // Release the connection back to the pool
     res.send('User added!');
   } catch (err) {
@@ -32,12 +32,11 @@ app.post('/api/addUser', async (req, res) => {
   }
 });
 
-
 // Route to add a new locker
 app.post('/api/addLocker', async (req, res) => {
   const { locker_number } = req.body;
   try {
-    const result = await db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number]);
+    await db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number]);
     res.send('Locker added!');
   } catch (err) {
     console.error('Error adding locker:', err);
@@ -49,14 +48,13 @@ app.post('/api/addLocker', async (req, res) => {
 app.post('/api/updateBilling', async (req, res) => {
   const { user_id, locker_id, voltage, current, power } = req.body;
   try {
-    const result = await db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power]);
-    res.send('Billing data inserted!'); // This line should return the correct response message
+    await db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power]);
+    res.send('Billing data inserted!');
   } catch (err) {
     console.error('Error updating billing:', err);
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 // Define route handler for GET request to the root URL
 app.get('/', (req, res) => {
