@@ -7,22 +7,16 @@ app.use(bodyParser.json());
 
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  host: 'localhost', // or your local MySQL host
+  user: 'jahangeer', // your MySQL username
+  password: 'Huawei@use123', // your MySQL password
+  database: 'charging_project' // your local database name
 });
 
 // Handle database connection errors
 db.on('error', (err) => {
   console.error('Database error:', err);
 });
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
 
 // Route to add a new user
 app.post('/api/addUser', async (req, res) => {
@@ -37,7 +31,6 @@ app.post('/api/addUser', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 // Route to add a new locker
 app.post('/api/addLocker', async (req, res) => {
