@@ -38,6 +38,7 @@ app.post('/api/addUser', async (req, res) => {
   }
 });
 
+
 // Route to add a new locker
 app.post('/api/addLocker', async (req, res) => {
   const { locker_number } = req.body;
