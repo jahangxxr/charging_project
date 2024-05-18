@@ -27,14 +27,16 @@ app.get('/api/checkDB', (req, res) => {
   });
 });
 
-
-
 // Route to add a new user
 app.post('/api/addUser', async (req, res) => {
   const { fingerprint_id, name, email } = req.body;
   try {
-    const result = await db.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email]);
-    res.send('User added!');
+    db.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email], (err, results) => {
+      if (err) {
+        throw err;
+      }
+      res.send('User added!');
+    });
   } catch (err) {
     console.error('Error adding user:', err);
     res.status(500).send('Internal Server Error');
@@ -45,8 +47,12 @@ app.post('/api/addUser', async (req, res) => {
 app.post('/api/addLocker', async (req, res) => {
   const { locker_number } = req.body;
   try {
-    const result = await db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number]);
-    res.send('Locker added!');
+    db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number], (err, results) => {
+      if (err) {
+        throw err;
+      }
+      res.send('Locker added!');
+    });
   } catch (err) {
     console.error('Error adding locker:', err);
     res.status(500).send('Internal Server Error');
@@ -57,8 +63,12 @@ app.post('/api/addLocker', async (req, res) => {
 app.post('/api/updateBilling', async (req, res) => {
   const { user_id, locker_id, voltage, current, power } = req.body;
   try {
-    const result = await db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power]);
-    res.send('Billing data inserted!');
+    db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power], (err, results) => {
+      if (err) {
+        throw err;
+      }
+      res.send('Billing data inserted!');
+    });
   } catch (err) {
     console.error('Error updating billing:', err);
     res.status(500).send('Internal Server Error');
