@@ -27,13 +27,14 @@ app.get('/api/checkDB', (req, res) => {
   });
 });
 
-// Route to add a new user
+// Error handling in db.query callbacks
 app.post('/api/addUser', async (req, res) => {
   const { fingerprint_id, name, email } = req.body;
   try {
     db.query('INSERT INTO users (fingerprint_id, name, email) VALUES (?, ?, ?)', [fingerprint_id, name, email], (err, results) => {
       if (err) {
-        throw err;
+        console.error('Error adding user:', err);
+        return res.status(500).send('Error adding user');
       }
       res.send('User added!');
     });
@@ -43,32 +44,23 @@ app.post('/api/addUser', async (req, res) => {
   }
 });
 
-// Route to add a new locker
+// Using async/await for cleaner error handling
 app.post('/api/addLocker', async (req, res) => {
   const { locker_number } = req.body;
   try {
-    db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number], (err, results) => {
-      if (err) {
-        throw err;
-      }
-      res.send('Locker added!');
-    });
+    await db.query('INSERT INTO lockers (locker_number, status) VALUES (?, "available")', [locker_number]);
+    res.send('Locker added!');
   } catch (err) {
     console.error('Error adding locker:', err);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Route to update billing information
 app.post('/api/updateBilling', async (req, res) => {
   const { user_id, locker_id, voltage, current, power } = req.body;
   try {
-    db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power], (err, results) => {
-      if (err) {
-        throw err;
-      }
-      res.send('Billing data inserted!');
-    });
+    await db.query('INSERT INTO billing (user_id, locker_id, voltage, current, power) VALUES (?, ?, ?, ?, ?)', [user_id, locker_id, voltage, current, power]);
+    res.send('Billing data inserted!');
   } catch (err) {
     console.error('Error updating billing:', err);
     res.status(500).send('Internal Server Error');
